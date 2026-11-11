@@ -87,18 +87,33 @@ function speakCurrentPage(){
     const piece=pieces[k],u=new SpeechSynthesisUtterance(piece.text),v=selectedVoice();
     if(v)u.voice=v;
     u.rate=+$('rate').value;u.pitch=1;
-    let done=false;
+    let done=false,timer=null;
+    const estimate=()=>Math.max(6000,piece.text.length/(12*(+$('rate').value||1))*1000*1.8+5000);
+    const finish=()=>{if(done)return false;done=true;clearTimeout(timer);return true};
+    const arm=ms=>{
+      clearTimeout(timer);
+      timer=setTimeout(()=>{
+        if(done)return;
+        if(!stillCurrent()){
+          if(session===readingSession&&isReading&&isPaused)arm(4000); // paused: keep waiting
+          return;
+        }
+        // Browser never reported the end of speech: move on ourselves
+        if(finish()){speechSynthesis.cancel();setTimeout(()=>speakPiece(k+1),150)}
+      },ms);
+    };
     u.onstart=()=>{if(stillCurrent()){$('play').textContent='Ⅱ';$('audlabel').textContent=who()+' · page '+(pageIndex+1)+' of '+chapterPages.length}};
     u.onboundary=e=>{if(piece.start>=0&&typeof e.charIndex==='number'&&stillCurrent())updateSpokenPointer(piece.start+e.charIndex)};
-    u.onend=()=>{if(done)return;done=true;speakPiece(k+1)};
+    u.onend=()=>{if(finish())speakPiece(k+1)};
     u.onerror=e=>{
       if(done)return;
       if(e&&(e.error==='interrupted'||e.error==='canceled'))return;
       if(!stillCurrent())return;
-      done=true;isReading=false;isPaused=false;
+      finish();isReading=false;isPaused=false;
       $('play').textContent='▶';$('audlabel').textContent='Reading stopped · tap to try again';
     };
     if(piece.start>=0)updateSpokenPointer(piece.start);
+    arm(estimate()+3000);
     speechSynthesis.speak(u);
   };
   speakPiece(0);
