@@ -610,8 +610,7 @@ setTimeout(speakChunk,80);
 };
 u.onerror=e=>{
 if(!stillCurrent())return;
-const error=e&&e.error?e.error:'speech-error';
-if(retries<2&&error!=='canceled'&&error!=='interrupted'){
+if(retries<2){
 retries++;
 setTimeout(speakChunk,180);
 return;
