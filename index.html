@@ -616,7 +616,7 @@ speechSynthesis.cancel();
 if(progress>=utterance.text.length-2){
 state.index++;state.retryOffset=0;state.retries=0;
 }else{
-state.retryOffset=Math.max(0,progress);
+state.retryOffset=Math.min(base.text.length,offset+Math.max(0,progress));
 state.retries++;
 }
 if(state.retries>3){
