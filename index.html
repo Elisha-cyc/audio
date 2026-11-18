@@ -583,7 +583,7 @@ if(!isReading||isPaused||!chapterPages[pageIndex])return;
 const chapterAtStart=i,pageAtStart=pageIndex,session=++readingSession,p=chapterPages[pageAtStart];
 const fullText=String(p.text||'');
 if(!fullText.trim()){advanceReadingPage(chapterAtStart,pageAtStart);return}
-const voice=selectedVoice(),maxChunkLength=100,chunks=[];
+const voice=selectedVoice(),maxChunkLength=55,chunks=[];
 let cursor=0;
 while(cursor<fullText.length){
 let end=Math.min(cursor+maxChunkLength,fullText.length);
@@ -605,7 +605,7 @@ clearTimer();
 if(!state.activeUtterance)return;
 const rate=Math.max(.5,Number($('rate').value)||1);
 const remaining=state.activeUtterance.text.length;
-const delay=Math.min(60000,Math.max(18000,Math.ceil(remaining*120/rate+12000)));
+const delay=Math.min(45000,Math.max(16000,Math.ceil(remaining*90/rate+7000)));
 state.timer=setTimeout(()=>{
 if(!current()||!state.activeUtterance)return;
 if(isPaused){state.armWatchdog();return}
@@ -619,7 +619,7 @@ state.index++;state.retryOffset=0;state.retries=0;
 state.retryOffset=Math.min(state.currentBase.text.length,state.currentOffset+Math.max(0,progress));
 state.retries++;
 }
-if(state.retries>3){
+if(state.retries>12){
 isReading=false;isPaused=false;
 $('play').textContent='▶';
 $('audlabel').textContent='Reading paused · tap play to retry this section';
@@ -673,7 +673,7 @@ if(isPaused)return;
 const progress=state.lastBoundary;
 state.retryOffset=Math.min(base.text.length,offset+Math.max(0,progress));
 state.retries++;
-if(state.retries>3){
+if(state.retries>12){
 isReading=false;isPaused=false;
 $('play').textContent='▶';
 $('audlabel').textContent='Reading paused · tap play to retry this section';
