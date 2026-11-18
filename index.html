@@ -605,20 +605,25 @@ clearTimer();
 if(!state.activeUtterance)return;
 const rate=Math.max(.5,Number($('rate').value)||1);
 const remaining=state.activeUtterance.text.length;
-const delay=Math.min(60000,Math.max(18000,Math.ceil(remaining*120/rate+12000)));
+const delay=Math.min(30000,Math.max(8000,Math.ceil(remaining*90/rate+5000)));
 state.timer=setTimeout(()=>{
 if(!current()||!state.activeUtterance)return;
 if(isPaused){state.armWatchdog();return}
 const utterance=state.activeUtterance;
 const progress=state.lastBoundary;
+// iOS Safari can finish speaking without reliably firing utterance.onend.
+// If its speech queue is already idle, treat this segment as completed instead
+// of retrying it from an old boundary and leaving the reader marked as playing.
+const queueFinished=!speechSynthesis.speaking&&!speechSynthesis.pending;
 state.activeUtterance=null;
+if(queueFinished){
+state.index++;state.retryOffset=0;state.retries=0;state.lastBoundary=0;
+setTimeout(state.playNext,100);
+return;
+}
 speechSynthesis.cancel();
-if(progress>=utterance.text.length-2){
-state.index++;state.retryOffset=0;state.retries=0;
-}else{
 state.retryOffset=Math.min(state.currentBase.text.length,state.currentOffset+Math.max(0,progress));
 state.retries++;
-}
 if(state.retries>3){
 isReading=false;isPaused=false;
 $('play').textContent='▶';
