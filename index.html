@@ -596,7 +596,7 @@ if(end<=cursor)end=Math.min(cursor+maxChunkLength,fullText.length);
 chunks.push({text:fullText.slice(cursor,end),start:cursor});
 cursor=end;
 }
-const state={session,chapterAtStart,pageAtStart,chunks,index:0,activeUtterance:null,lastBoundary:0,retryOffset:0,retries:0,timer:null};
+const state={session,chapterAtStart,pageAtStart,chunks,index:0,activeUtterance:null,lastBoundary:0,retryOffset:0,retries:0,timer:null,currentBase:null,currentOffset:0};
 readingPlayback=state;
 const current=()=>readingPlayback===state&&session===readingSession&&isReading&&i===chapterAtStart&&pageIndex===pageAtStart;
 const clearTimer=()=>{if(state.timer!==null){clearTimeout(state.timer);state.timer=null}};
@@ -616,7 +616,7 @@ speechSynthesis.cancel();
 if(progress>=utterance.text.length-2){
 state.index++;state.retryOffset=0;state.retries=0;
 }else{
-state.retryOffset=Math.min(base.text.length,offset+Math.max(0,progress));
+state.retryOffset=Math.min(state.currentBase.text.length,state.currentOffset+Math.max(0,progress));
 state.retries++;
 }
 if(state.retries>3){
@@ -640,6 +640,7 @@ return;
 }
 const base=state.chunks[state.index],offset=Math.min(state.retryOffset,base.text.length);
 const spokenText=base.text.slice(offset);
+state.currentBase=base;state.currentOffset=offset;
 if(!spokenText){state.index++;state.retryOffset=0;state.retries=0;state.playNext();return}
 const utterance=new SpeechSynthesisUtterance(spokenText);
 state.activeUtterance=utterance;
@@ -670,7 +671,7 @@ clearTimer();
 state.activeUtterance=null;
 if(isPaused)return;
 const progress=state.lastBoundary;
-state.retryOffset=Math.max(0,progress);
+state.retryOffset=Math.min(base.text.length,offset+Math.max(0,progress));
 state.retries++;
 if(state.retries>3){
 isReading=false;isPaused=false;
