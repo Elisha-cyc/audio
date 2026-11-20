@@ -4,7 +4,7 @@
   'use strict';
   const root=document.getElementById('chapterMenuLevels');
   if(!root || typeof chapters==='undefined' || typeof makePages!=='function') return;
-  const core=chapters.slice(0,6);
+  const core=chapters.filter(chapter=>chapter.textbookChapter);
   if(!core.length) return;
   const style=document.createElement('style');
   style.textContent=`
@@ -38,9 +38,10 @@
   panel.append(heading,note);
   const groups=[];
   core.forEach((chapter,chapterIndex)=>{
+    const actualIndex=chapters.indexOf(chapter);
     const pages=makePages(chapter).filter(page=>page.kind!=='course connection');
     const details=document.createElement('details');
-    details.open=chapterIndex===i;
+    details.open=actualIndex===i;
     const summary=document.createElement('summary');
     const number=document.createElement('span');
     number.className='outline-chapter-number';
@@ -58,7 +59,7 @@
       button.type='button';
       button.className='textbook-outline-item';
       button.textContent=page.heading||('Subtopic '+(pageNumber+1));
-      button.dataset.chapter=String(chapterIndex);
+      button.dataset.chapter=String(actualIndex);
       button.dataset.page=String(pageNumber);
       button.addEventListener('click',()=>{
         const targetChapter=Number(button.dataset.chapter);
@@ -79,7 +80,7 @@
   });
   root.insertAdjacentElement('afterend',panel);
   function sync(){
-    panel.querySelectorAll('details').forEach((d,n)=>{d.open=n===i});
+    panel.querySelectorAll('details').forEach((d,n)=>{d.open=chapters.indexOf(core[n])===i});
     panel.querySelectorAll('.textbook-outline-item').forEach(button=>{
       button.classList.toggle('current',Number(button.dataset.chapter)===i&&Number(button.dataset.page)===pageIndex);
     });
