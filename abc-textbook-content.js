@@ -259,6 +259,9 @@ Common tenets include extreme nationalism, authoritarian leadership, glorificati
 SUBTOPIC: Nazism
 Nazism was the German form of fascism developed under Adolf Hitler and the National Socialist German Workers' Party. It combined totalitarian rule and extreme nationalism with racist and antisemitic doctrines, expansionism, and state-organised persecution and genocide.
 
+SUBTOPIC: Life of Adolf Hitler
+Adolf Hitler was the leader of the Nazi Party and became Chancellor of Germany in 1933. He established a dictatorship, dismantled democratic institutions, promoted racist and antisemitic policies, and led Germany into the Second World War. Nazi rule was responsible for the Holocaust and other mass atrocities. His rise is studied to understand how extremist ideology, propaganda, political violence, and institutional failure can destroy democracy.
+
 SUBTOPIC: Principles underlying Nazism
 Nazism promoted racial hierarchy, antisemitism, the idea of a racially defined national community, loyalty to a supreme leader, territorial expansion, militarism, and the suppression of political opposition. These doctrines led to aggressive war, the Holocaust, and mass atrocities.
 
