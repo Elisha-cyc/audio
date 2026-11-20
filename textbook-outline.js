@@ -79,7 +79,7 @@
   });
   root.insertAdjacentElement('afterend',panel);
   function sync(){
-    panel.querySelectorAll('.textbook-outline details').forEach((d,n)=>{d.open=n===i});
+    panel.querySelectorAll('details').forEach((d,n)=>{d.open=n===i});
     panel.querySelectorAll('.textbook-outline-item').forEach(button=>{
       button.classList.toggle('current',Number(button.dataset.chapter)===i&&Number(button.dataset.page)===pageIndex);
     });
