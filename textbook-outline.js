@@ -53,24 +53,19 @@
     summary.append(number,title,count);
     const list=document.createElement('div');
     list.className='textbook-outline-list';
-    pages.forEach((page,pageIndex)=>{
+    pages.forEach((page,pageNumber)=>{
       const button=document.createElement('button');
       button.type='button';
       button.className='textbook-outline-item';
-      button.textContent=page.heading||('Subtopic '+(pageIndex+1));
+      button.textContent=page.heading||('Subtopic '+(pageNumber+1));
       button.dataset.chapter=String(chapterIndex);
-      button.dataset.page=String(pageIndex);
+      button.dataset.page=String(pageNumber);
       button.addEventListener('click',()=>{
         const targetChapter=Number(button.dataset.chapter);
         const targetPage=Number(button.dataset.page);
         if(typeof show==='function') show(targetChapter);
-        if(typeof changePage==='function' && targetPage!==0){
-          pageIndex=targetPage;
-          window.setTimeout(()=>{},0);
-        }
         if(typeof chapterPages!=='undefined' && chapterPages[targetPage]){
-          window.pageIndex=targetPage;
-          try { renderPage(); if(typeof rememberPosition==='function') rememberPosition(); } catch(e) {}
+          try { pageIndex=targetPage; renderPage(); if(typeof rememberPosition==='function') rememberPosition(); if(typeof nav==='function') nav(); } catch(e) {}
         }
         panel.querySelectorAll('.textbook-outline-item.current').forEach(el=>el.classList.remove('current'));
         button.classList.add('current');
