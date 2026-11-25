@@ -1,10 +1,10 @@
-/* Textbook contents browser for the six core ABC of Political Science chapters.
+/* Textbook contents browser for the POLI 111 ABC and Political Institutions chapters.
    Reuses the same lesson/page data as the audiobook, so the outline stays in sync. */
 (function(){
   'use strict';
   const root=document.getElementById('chapterMenuLevels');
   if(!root || typeof chapters==='undefined' || typeof makePages!=='function') return;
-  const core=chapters.filter(chapter=>chapter.textbookChapter);
+  const core=chapters.filter(chapter=>chapter.textbookChapter||chapter.institutionsChapter);
   if(!core.length) return;
   const style=document.createElement('style');
   style.textContent=`
@@ -34,7 +34,7 @@
   heading.textContent='Textbook contents';
   const note=document.createElement('p');
   note.className='textbook-outline-note';
-  note.textContent='All six core chapters · Select any subtopic to open its audiobook reading.';
+  note.textContent='All 19 textbook chapters · Select any topic or subtopic to open its essay-style audiobook reading.';
   panel.append(heading,note);
   const groups=[];
   core.forEach((chapter,chapterIndex)=>{
